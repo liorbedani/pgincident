@@ -38,8 +38,8 @@ Risks:
 """
 
 @app.get("/")
-def root():
-    return {"status": "ok"}
+def home():
+    return FileResponse("index.html")
 
 @app.post("/analyze")
 def analyze(data: AnalyzeInput):
@@ -70,3 +70,5 @@ PostgreSQL version: {data.version}
             result_text += block.text
 
     return {"result": result_text}
+from fastapi.responses import FileResponse
+
