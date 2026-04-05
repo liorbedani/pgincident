@@ -15,7 +15,6 @@
       --border: rgba(255,255,255,0.08);
       --accent: #6ea8fe;
       --accent-2: #8b5cf6;
-      --success: #22c55e;
       --radius: 18px;
     }
 
@@ -43,21 +42,14 @@
     .subtitle {
       color: var(--muted);
       margin-bottom: 18px;
-      font-size: 18px;
     }
 
     .value-box {
       background: rgba(255,255,255,0.03);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 14px 16px;
+      padding: 14px;
       margin-bottom: 28px;
-    }
-
-    .value-title {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 10px;
     }
 
     .example-log {
@@ -65,15 +57,9 @@
       border-left: 3px solid #6ea8fe;
       padding: 12px;
       border-radius: 10px;
-      white-space: pre-wrap;
-      font-family: Consolas, monospace;
+      font-family: monospace;
       font-size: 13px;
       margin-bottom: 10px;
-    }
-
-    .example-result {
-      color: #cdd8ff;
-      font-size: 14px;
     }
 
     .grid {
@@ -97,12 +83,6 @@
       border: 1px solid var(--border);
       background: var(--panel-2);
       color: white;
-      box-sizing: border-box;
-    }
-
-    textarea {
-      min-height: 88px;
-      resize: vertical;
     }
 
     button {
@@ -117,7 +97,7 @@
     .primary-btn {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: white;
-      font-weight: 700;
+      font-weight: bold;
     }
 
     .secondary-btn {
@@ -133,8 +113,7 @@
       border-radius: 10px;
       border-left: 3px solid #6ea8fe;
       white-space: pre-wrap;
-      min-height: 220px;
-      line-height: 1.6;
+      min-height: 200px;
     }
 
     .muted {
@@ -146,8 +125,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
     }
 
     .mini-line {
@@ -157,25 +134,10 @@
     }
 
     .trust-line {
-      margin-top: 28px;
+      margin-top: 40px;
       text-align: center;
       color: var(--muted);
       font-size: 13px;
-    }
-
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      h1 {
-        font-size: 32px;
-      }
-
-      .top-row {
-        align-items: flex-start;
-        flex-direction: column;
-      }
     }
   </style>
 </head>
@@ -188,12 +150,14 @@
     </p>
 
     <div class="value-box">
-      <div class="value-title">Example</div>
-      <div class="example-log">FATAL: no pg_hba.conf entry for host "10.1.2.3", user "app", database "prod", no encryption</div>
-      <div class="example-result">→ Get root cause, next checks, and exact fix commands in seconds.</div>
+      <div class="example-log">
+FATAL: no pg_hba.conf entry for host "10.1.2.3", user "app", database "prod", no encryption
+      </div>
+      → Get root cause, next checks, and exact fix commands in seconds.
     </div>
 
     <div class="grid">
+
       <div class="card">
         <textarea id="error" placeholder="Paste error here..."></textarea>
         <textarea id="logs" placeholder="Paste logs..."></textarea>
@@ -204,23 +168,24 @@
         <button class="secondary-btn" onclick="loadExample()">Example</button>
         <button class="secondary-btn" onclick="clearForm()">Clear</button>
 
-        <div class="mini-line">Free up to 5 analyses per day</div>
+        <div class="mini-line">Free during beta</div>
       </div>
 
       <div class="card">
         <div class="top-row">
-          <div class="muted"><strong>Diagnosis</strong></div>
-          <button class="secondary-btn" onclick="copyResult()">Copy 📋</button>
+          <div class="muted">Diagnosis</div>
+          <button class="secondary-btn" onclick="copyResult(event)">Copy 📋</button>
         </div>
 
         <div id="result" class="result-box">
           <span class="muted">Paste an error and click Analyze to get a diagnosis.</span>
         </div>
       </div>
+
     </div>
 
     <div class="trust-line">
-      Used by DevOps engineers &amp; DBAs
+      Built for DevOps engineers & DBAs
     </div>
   </div>
 
@@ -229,7 +194,7 @@
       document.getElementById("error").value =
         'FATAL: no pg_hba.conf entry for host "10.1.2.3", user "app", database "prod", no encryption';
       document.getElementById("logs").value =
-        '2026-04-03 12:10:00 FATAL: no pg_hba.conf entry for host "10.1.2.3", user "app", database "prod", no encryption';
+        '2026-04-03 FATAL: no pg_hba.conf entry';
       document.getElementById("os").value = "RHEL 8";
       document.getElementById("version").value = "15";
     }
@@ -243,9 +208,17 @@
         '<span class="muted">Paste an error and click Analyze to get a diagnosis.</span>';
     }
 
-    function copyResult() {
+    function copyResult(event) {
+      const btn = event.target;
       const text = document.getElementById("result").innerText;
-      navigator.clipboard.writeText(text);
+
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.innerText;
+        btn.innerText = "Copied!";
+        setTimeout(() => {
+          btn.innerText = original;
+        }, 1200);
+      });
     }
 
     async function analyzeIncident() {
@@ -256,14 +229,13 @@
       const resultEl = document.getElementById("result");
 
       if (!error) {
-        resultEl.innerHTML = "<span class='muted'>Please paste an error first.</span>";
+        resultEl.innerHTML = "<span class='muted'>Please paste an error first</span>";
         return;
       }
 
       resultEl.innerHTML = `
-<div style="color:#6ea8fe; line-height:1.8;">
-  🔍 Investigating logs...
-  <br><br>
+<div style="color:#6ea8fe">
+  🔍 Investigating logs...<br><br>
   🧠 Finding root cause...
 </div>
 `;
@@ -276,13 +248,7 @@
         });
 
         const data = await res.json();
-
-        if (!res.ok) {
-          resultEl.innerText = data.detail || "Something went wrong.";
-          return;
-        }
-
-        resultEl.innerText = data.result || "No diagnosis returned.";
+        resultEl.innerText = data.result;
       } catch {
         resultEl.innerText = "Something went wrong. Try again.";
       }
