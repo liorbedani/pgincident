@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PgIncident</title>
+
   <style>
     :root {
       --bg: #0b1020;
@@ -15,13 +16,8 @@
       --accent: #6ea8fe;
       --accent-2: #8b5cf6;
       --success: #22c55e;
-      --danger: #ef4444;
       --shadow: 0 20px 50px rgba(0,0,0,0.35);
       --radius: 18px;
-    }
-
-    * {
-      box-sizing: border-box;
     }
 
     body {
@@ -40,133 +36,46 @@
       padding: 32px 20px 60px;
     }
 
-    .hero {
-      margin-bottom: 26px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      color: var(--muted);
-      font-size: 13px;
-      background: rgba(255,255,255,0.03);
-      margin-bottom: 16px;
-    }
-
     h1 {
-      margin: 0 0 10px;
       font-size: 42px;
-      line-height: 1.08;
-      letter-spacing: -0.02em;
+      margin-bottom: 10px;
     }
 
     .subtitle {
-      max-width: 780px;
       color: var(--muted);
       font-size: 18px;
-      line-height: 1.6;
-      margin: 0;
+      margin-bottom: 30px;
     }
 
     .grid {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
       gap: 22px;
-      margin-top: 28px;
     }
 
     .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      background: rgba(255,255,255,0.03);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      padding: 20px;
     }
 
-    .card-header {
-      padding: 18px 22px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-    }
-
-    .card-title {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .card-desc {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .card-body {
-      padding: 22px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .hint {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 400;
-      margin-left: 6px;
-    }
-
-    textarea,
-    input {
+    textarea, input {
       width: 100%;
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--panel-2);
-      color: var(--text);
-      border-radius: 14px;
-      padding: 14px 15px;
-      font-size: 14px;
-      outline: none;
-      transition: 0.2s ease;
-      margin-bottom: 16px;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-
-    textarea:focus,
-    input:focus {
-      border-color: rgba(110,168,254,0.7);
-      box-shadow: 0 0 0 4px rgba(110,168,254,0.12);
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 8px;
+      color: white;
     }
 
     button {
-      border: 0;
-      border-radius: 14px;
-      padding: 13px 18px;
-      font-size: 14px;
-      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
       cursor: pointer;
-      transition: 0.2s ease;
+      margin-right: 8px;
     }
 
     .primary-btn {
@@ -174,200 +83,62 @@
       color: white;
     }
 
-    .primary-btn:hover {
-      transform: translateY(-1px);
-      opacity: 0.96;
-    }
-
     .secondary-btn {
       background: rgba(255,255,255,0.05);
-      color: var(--text);
+      color: white;
       border: 1px solid var(--border);
-    }
-
-    .secondary-btn:hover {
-      background: rgba(255,255,255,0.08);
-    }
-
-    .output {
-      min-height: 520px;
-      display: flex;
-      flex-direction: column;
     }
 
     .result-box {
-      flex: 1;
+      margin-top: 10px;
+      padding: 15px;
       background: #0d1430;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
+      border-radius: 10px;
+      border-left: 3px solid #6ea8fe;
       white-space: pre-wrap;
-      line-height: 1.7;
-      color: #e8edff;
-      font-size: 14px;
-      overflow-wrap: anywhere;
-    }
-
-    .empty-state {
-      color: var(--muted);
-    }
-
-    .footer-note {
-      margin-top: 16px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .mini-features {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .mini-feature {
-      padding: 14px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 12px rgba(34,197,94,0.7);
-    }
-
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .row,
-      .mini-features {
-        grid-template-columns: 1fr;
-      }
-
-      h1 {
-        font-size: 32px;
-      }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <section class="hero">
-      <div class="badge">PostgreSQL Incident Copilot</div>
-      <h1>Fix PostgreSQL errors in seconds</h1>
-      <p class="subtitle">
-        Paste your error or logs and get a clear diagnosis, likely root cause,
-        next checks, commands, and risk notes in one place.
-      </p>
-    </section>
+    <h1>Fix PostgreSQL errors in seconds</h1>
+    <p class="subtitle">
+      Paste your error or logs and get root cause + commands instantly.
+    </p>
 
-    <section class="grid">
+    <div class="grid">
+      <!-- INPUT -->
       <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Incident Input</h2>
-          <p class="card-desc">Give the tool the error and any relevant PostgreSQL logs.</p>
-        </div>
-        <div class="card-body">
-          <label for="error">
-            Error message
-            <span class="hint">required</span>
-          </label>
-          <textarea
-            id="error"
-            rows="4"
-            placeholder='Example: FATAL: no pg_hba.conf entry for host "10.1.2.3", user "app", database "prod", no encryption'
-          ></textarea>
+        <textarea id="error" placeholder="Paste error here..."></textarea>
+        <textarea id="logs" placeholder="Paste logs..."></textarea>
+        <input id="os" placeholder="OS (optional)" />
+        <input id="version" placeholder="Postgres version (optional)" />
 
-          <label for="logs">
-            Logs
-            <span class="hint">optional but recommended</span>
-          </label>
-          <textarea
-            id="logs"
-            rows="8"
-            placeholder="Paste relevant PostgreSQL logs here..."
-          ></textarea>
-
-          <div class="row">
-            <div>
-              <label for="os">
-                OS
-                <span class="hint">optional</span>
-              </label>
-              <input id="os" type="text" placeholder="e.g. RHEL 8" />
-            </div>
-
-            <div>
-              <label for="version">
-                PostgreSQL version
-                <span class="hint">optional</span>
-              </label>
-              <input id="version" type="text" placeholder="e.g. 15" />
-            </div>
-          </div>
-
-          <div class="actions">
-            <button class="primary-btn" onclick="analyzeIncident()">Analyze Incident</button>
-            <button class="secondary-btn" onclick="loadExample()">Load Example</button>
-            <button class="secondary-btn" onclick="clearForm()">Clear</button>
-          </div>
-
-          <div class="mini-features">
-            <div class="mini-feature">Structured output instead of open-ended chat.</div>
-            <div class="mini-feature">Focused on PostgreSQL incidents and production-safe actions.</div>
-            <div class="mini-feature">Fast enough for real on-call debugging flow.</div>
-          </div>
-        </div>
+        <button class="primary-btn" onclick="analyzeIncident()">Analyze</button>
+        <button class="secondary-btn" onclick="loadExample()">Example</button>
+        <button class="secondary-btn" onclick="clearForm()">Clear</button>
       </div>
 
-      <div class="card output">
-        <div class="card-header">
-          <h2 class="card-title">Diagnosis</h2>
-          <p class="card-desc">Root cause, next checks, commands, and risk notes.</p>
+      <!-- OUTPUT -->
+      <div class="card">
+        <div id="result" class="result-box">
+          Your diagnosis will appear here.
         </div>
-        <div class="card-body">
-          <div class="status">
-            <span class="dot"></span>
-            <span>Ready to analyze</span>
-          </div>
 
-          <pre id="result" class="result-box"><span class="empty-state">Your diagnosis will appear here.</span></pre>
-
-          <div class="footer-note">
-            Tip: include the exact PostgreSQL error and a short log snippet for better accuracy.
-          </div>
-        </div>
+        <button class="secondary-btn" onclick="copyResult()">Copy</button>
       </div>
-    </section>
+    </div>
   </div>
 
   <script>
     function loadExample() {
       document.getElementById("error").value =
-        'FATAL: no pg_hba.conf entry for host "10.1.2.3", user "app", database "prod", no encryption';
+        'FATAL: no pg_hba.conf entry for host "10.1.2.3"';
       document.getElementById("logs").value =
-        '2026-04-03 12:10:00 FATAL: no pg_hba.conf entry for host "10.1.2.3", user "app", database "prod", no encryption';
+        'FATAL: no pg_hba.conf entry...';
       document.getElementById("os").value = "RHEL 8";
       document.getElementById("version").value = "15";
-      document.getElementById("result").innerText = "Example loaded. Click Analyze Incident.";
     }
 
     function clearForm() {
@@ -375,7 +146,12 @@
       document.getElementById("logs").value = "";
       document.getElementById("os").value = "";
       document.getElementById("version").value = "";
-      document.getElementById("result").innerText = "Your diagnosis will appear here.";
+      document.getElementById("result").innerText = "Cleared.";
+    }
+
+    function copyResult() {
+      const text = document.getElementById("result").innerText;
+      navigator.clipboard.writeText(text);
     }
 
     async function analyzeIncident() {
@@ -386,47 +162,26 @@
       const resultEl = document.getElementById("result");
 
       if (!error) {
-        resultEl.innerText = "Please paste an error message first.";
+        resultEl.innerText = "Please paste error first";
         return;
       }
 
-      resultEl.innerHTML = "⏳ Analyzing...<br><br>This may take a few seconds";
+      resultEl.innerHTML = "⏳ Analyzing...";
 
       try {
         const res = await fetch("/analyze", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            error,
-            logs,
-            os,
-            version
-          })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ error, logs, os, version })
         });
 
         const data = await res.json();
-
-        if (!res.ok) {
-          resultEl.innerText = data.detail || "Something went wrong.";
-          return;
-        }
-
-        resultEl.innerText = data.result || "No diagnosis returned.";
-      } catch (err) {
-        resultEl.innerText = "Request failed. Please try again.";
+        resultEl.innerText = data.result;
+      } catch {
+        resultEl.innerText = "Error occurred";
       }
     }
   </script>
 </body>
 </html>
-.result-box {
-  border-left: 3px solid #6ea8fe;
-}
-<button class="secondary-btn" onclick="copyResult()">Copy</button>
-function copyResult() {
-  const text = document.getElementById("result").innerText;
-  navigator.clipboard.writeText(text);
-}
 
