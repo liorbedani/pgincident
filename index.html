@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PgIncident</title>
+</head>
+<body>
+  <h1>PgIncident</h1>
+  <p>Paste PostgreSQL incident details and get diagnosis.</p>
+
+  <textarea id="error" rows="4" cols="100" placeholder="Paste PostgreSQL error"></textarea><br><br>
+  <textarea id="logs" rows="10" cols="100" placeholder="Paste logs"></textarea><br><br>
+  <input id="os" type="text" size="40" placeholder="OS (e.g. RHEL 8)" /><br><br>
+  <input id="version" type="text" size="40" placeholder="PostgreSQL version" /><br><br>
+
+  <button onclick="analyzeIncident()">Analyze</button>
+
+  <h2>Result</h2>
+  <pre id="result"></pre>
+
+  <script>
+    async function analyzeIncident() {
+      const payload = {
+        error: document.getElementById("error").value,
+        logs: document.getElementById("logs").value,
+        os: document.getElementById("os").value,
+        version: document.getElementById("version").value
+      };
+
+      const res = await fetch("http://127.0.0.1:8000/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      document.getElementById("result").innerText = data.result || JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
