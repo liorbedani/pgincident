@@ -390,7 +390,7 @@
         return;
       }
 
-      resultEl.innerText = "Analyzing incident...";
+      resultEl.innerHTML = "⏳ Analyzing...<br><br>This may take a few seconds";
 
       try {
         const res = await fetch("/analyze", {
@@ -421,33 +421,12 @@
   </script>
 </body>
 </html>
+.result-box {
+  border-left: 3px solid #6ea8fe;
+}
+<button class="secondary-btn" onclick="copyResult()">Copy</button>
+function copyResult() {
+  const text = document.getElementById("result").innerText;
+  navigator.clipboard.writeText(text);
+}
 
-      try {
-        const res = await fetch("/analyze", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            error,
-            logs,
-            os,
-            version
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          resultEl.innerText = data.detail || "Something went wrong.";
-          return;
-        }
-
-        resultEl.innerText = data.result || "No result returned.";
-      } catch (err) {
-        resultEl.innerText = "Request failed. Please try again.";
-      }
-    }
-  </script>
-</body>
-</html>
