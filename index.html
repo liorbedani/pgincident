@@ -16,7 +16,6 @@
       --accent: #6ea8fe;
       --accent-2: #8b5cf6;
       --success: #22c55e;
-      --shadow: 0 20px 50px rgba(0,0,0,0.35);
       --radius: 18px;
     }
 
@@ -31,26 +30,25 @@
     }
 
     .container {
-      max-width: 1120px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 32px 20px 60px;
+      padding: 40px 20px;
     }
 
     h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
+      font-size: 40px;
+      margin-bottom: 8px;
     }
 
     .subtitle {
       color: var(--muted);
-      font-size: 18px;
       margin-bottom: 30px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 22px;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
 
     .card {
@@ -71,11 +69,12 @@
     }
 
     button {
-      padding: 10px 16px;
+      padding: 10px 14px;
       border-radius: 10px;
       border: none;
       cursor: pointer;
       margin-right: 8px;
+      font-size: 13px;
     }
 
     .primary-btn {
@@ -91,12 +90,26 @@
 
     .result-box {
       margin-top: 10px;
-      padding: 15px;
+      padding: 16px;
       background: #0d1430;
       border-radius: 10px;
       border-left: 3px solid #6ea8fe;
       white-space: pre-wrap;
+      min-height: 180px;
+      line-height: 1.6;
     }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
   </style>
 </head>
 
@@ -108,6 +121,7 @@
     </p>
 
     <div class="grid">
+
       <!-- INPUT -->
       <div class="card">
         <textarea id="error" placeholder="Paste error here..."></textarea>
@@ -122,21 +136,27 @@
 
       <!-- OUTPUT -->
       <div class="card">
-        <div id="result" class="result-box">
-          Your diagnosis will appear here.
+        <div class="top-row">
+          <div class="muted">Diagnosis</div>
+          <button class="secondary-btn" onclick="copyResult()">Copy 📋</button>
         </div>
 
-        <button class="secondary-btn" onclick="copyResult()">Copy</button>
+        <div id="result" class="result-box">
+          <span class="muted">
+            Paste an error and click Analyze to get a diagnosis.
+          </span>
+        </div>
       </div>
+
     </div>
   </div>
 
   <script>
     function loadExample() {
       document.getElementById("error").value =
-        'FATAL: no pg_hba.conf entry for host "10.1.2.3"';
+        'FATAL: no pg_hba.conf entry for host "10.1.2.3", user "app", database "prod", no encryption';
       document.getElementById("logs").value =
-        'FATAL: no pg_hba.conf entry...';
+        '2026-04-03 12:10:00 FATAL: no pg_hba.conf entry for host "10.1.2.3", user "app", database "prod", no encryption';
       document.getElementById("os").value = "RHEL 8";
       document.getElementById("version").value = "15";
     }
@@ -146,7 +166,8 @@
       document.getElementById("logs").value = "";
       document.getElementById("os").value = "";
       document.getElementById("version").value = "";
-      document.getElementById("result").innerText = "Cleared.";
+      document.getElementById("result").innerHTML =
+        '<span class="muted">Paste an error and click Analyze to get a diagnosis.</span>';
     }
 
     function copyResult() {
@@ -162,11 +183,11 @@
       const resultEl = document.getElementById("result");
 
       if (!error) {
-        resultEl.innerText = "Please paste error first";
+        resultEl.innerHTML = "<span class='muted'>Please paste an error first</span>";
         return;
       }
 
-      resultEl.innerHTML = "⏳ Analyzing...";
+      resultEl.innerHTML = "⏳ Analyzing incident...<br><br>This may take a few seconds";
 
       try {
         const res = await fetch("/analyze", {
@@ -178,10 +199,9 @@
         const data = await res.json();
         resultEl.innerText = data.result;
       } catch {
-        resultEl.innerText = "Error occurred";
+        resultEl.innerText = "Something went wrong. Try again.";
       }
     }
   </script>
 </body>
 </html>
-
