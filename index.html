@@ -42,7 +42,38 @@
 
     .subtitle {
       color: var(--muted);
-      margin-bottom: 30px;
+      margin-bottom: 18px;
+      font-size: 18px;
+    }
+
+    .value-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 28px;
+    }
+
+    .value-title {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .example-log {
+      background: #0d1430;
+      border-left: 3px solid #6ea8fe;
+      padding: 12px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      font-family: Consolas, monospace;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .example-result {
+      color: #cdd8ff;
+      font-size: 14px;
     }
 
     .grid {
@@ -66,6 +97,12 @@
       border: 1px solid var(--border);
       background: var(--panel-2);
       color: white;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
     }
 
     button {
@@ -80,6 +117,7 @@
     .primary-btn {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: white;
+      font-weight: 700;
     }
 
     .secondary-btn {
@@ -95,7 +133,7 @@
       border-radius: 10px;
       border-left: 3px solid #6ea8fe;
       white-space: pre-wrap;
-      min-height: 180px;
+      min-height: 220px;
       line-height: 1.6;
     }
 
@@ -108,8 +146,37 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
     }
 
+    .mini-line {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .trust-line {
+      margin-top: 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+
+      .top-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 
@@ -120,34 +187,40 @@
       Paste your error or logs and get root cause + commands instantly.
     </p>
 
-    <div class="grid">
+    <div class="value-box">
+      <div class="value-title">Example</div>
+      <div class="example-log">FATAL: no pg_hba.conf entry for host "10.1.2.3", user "app", database "prod", no encryption</div>
+      <div class="example-result">→ Get root cause, next checks, and exact fix commands in seconds.</div>
+    </div>
 
-      <!-- INPUT -->
+    <div class="grid">
       <div class="card">
         <textarea id="error" placeholder="Paste error here..."></textarea>
         <textarea id="logs" placeholder="Paste logs..."></textarea>
         <input id="os" placeholder="OS (optional)" />
         <input id="version" placeholder="Postgres version (optional)" />
 
-        <button class="primary-btn" onclick="analyzeIncident()">Analyze</button>
+        <button class="primary-btn" onclick="analyzeIncident()">Analyze Incident 🚀</button>
         <button class="secondary-btn" onclick="loadExample()">Example</button>
         <button class="secondary-btn" onclick="clearForm()">Clear</button>
+
+        <div class="mini-line">Free up to 5 analyses per day</div>
       </div>
 
-      <!-- OUTPUT -->
       <div class="card">
         <div class="top-row">
-          <div class="muted">Diagnosis</div>
+          <div class="muted"><strong>Diagnosis</strong></div>
           <button class="secondary-btn" onclick="copyResult()">Copy 📋</button>
         </div>
 
         <div id="result" class="result-box">
-          <span class="muted">
-            Paste an error and click Analyze to get a diagnosis.
-          </span>
+          <span class="muted">Paste an error and click Analyze to get a diagnosis.</span>
         </div>
       </div>
+    </div>
 
+    <div class="trust-line">
+      Used by DevOps engineers &amp; DBAs
     </div>
   </div>
 
@@ -183,11 +256,17 @@
       const resultEl = document.getElementById("result");
 
       if (!error) {
-        resultEl.innerHTML = "<span class='muted'>Please paste an error first</span>";
+        resultEl.innerHTML = "<span class='muted'>Please paste an error first.</span>";
         return;
       }
 
-      resultEl.innerHTML = "⏳ Analyzing incident...<br><br>This may take a few seconds";
+      resultEl.innerHTML = `
+<div style="color:#6ea8fe; line-height:1.8;">
+  🔍 Investigating logs...
+  <br><br>
+  🧠 Finding root cause...
+</div>
+`;
 
       try {
         const res = await fetch("/analyze", {
@@ -197,7 +276,13 @@
         });
 
         const data = await res.json();
-        resultEl.innerText = data.result;
+
+        if (!res.ok) {
+          resultEl.innerText = data.detail || "Something went wrong.";
+          return;
+        }
+
+        resultEl.innerText = data.result || "No diagnosis returned.";
       } catch {
         resultEl.innerText = "Something went wrong. Try again.";
       }
