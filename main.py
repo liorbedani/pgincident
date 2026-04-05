@@ -51,7 +51,7 @@ Risks:
 
 @app.get("/")
 def home():
-    return FileResponse("index.html2")
+    return FileResponse("index.html")
 
 @app.post("/analyze")
 def analyze(data: AnalyzeInput):
