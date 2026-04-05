@@ -1,22 +1,11 @@
-import os
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import anthropic
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 client = anthropic.Anthropic(
-    api_key=os.getenv("ANTHROPIC_API_KEY")
+    api_key="NTHROPIC_API_KEY"
 )
 
 class AnalyzeInput(BaseModel):
@@ -36,7 +25,6 @@ Rules:
 - Use logs as evidence
 - If unsure, say so clearly
 - Do not use markdown headings
-- Do not use code fences
 - Return plain text only
 
 Return EXACTLY in this format:
@@ -51,7 +39,7 @@ Risks:
 
 @app.get("/")
 def home():
-    return FileResponse("index.html2")
+    return FileResponse("index.html")
 
 @app.post("/analyze")
 def analyze(data: AnalyzeInput):
@@ -81,4 +69,6 @@ PostgreSQL version: {data.version}
         if block.type == "text":
             result_text += block.text
 
-    return {"result": result_text.strip()}
+    return {"result": result_text}
+from fastapi.responses import FileResponse
+
